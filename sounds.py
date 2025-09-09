@@ -4,36 +4,50 @@ import os
 class SoundManager:
     def __init__(self):
         """Initialize sound manager - handles all game sounds"""
-        pygame.mixer.init(frequency=22050, size=-16, channels=2, buffer=512)
-        
-        # Sound effects (we'll create simple tones since we don't have actual sound files)
-        self.sounds = {}
-        self.music_playing = False
-        
-        # Create simple sound effects using pygame's sound generation
-        self.create_sounds()
+        try:
+            pygame.mixer.init(frequency=22050, size=-16, channels=2, buffer=512)
+            
+            # Sound effects (we'll create simple tones since we don't have actual sound files)
+            self.sounds = {}
+            self.music_playing = False
+            self.sound_enabled = True
+            
+            # Create simple sound effects using pygame's sound generation
+            self.create_sounds()
+        except:
+            # If sound fails to initialize, disable it
+            self.sound_enabled = False
+            self.sounds = {}
+            self.music_playing = False
         
     def create_sounds(self):
         """Create simple sound effects programmatically"""
-        # Player shoot sound - short beep
-        shoot_sound = pygame.sndarray.make_sound(self.generate_tone(800, 0.1))
-        self.sounds['shoot'] = shoot_sound
-        
-        # Alien shoot sound - lower pitch
-        alien_shoot_sound = pygame.sndarray.make_sound(self.generate_tone(400, 0.15))
-        self.sounds['alien_shoot'] = alien_shoot_sound
-        
-        # Explosion sound - noise burst
-        explosion_sound = pygame.sndarray.make_sound(self.generate_noise(0.3))
-        self.sounds['explosion'] = explosion_sound
-        
-        # Player hit sound - harsh tone
-        hit_sound = pygame.sndarray.make_sound(self.generate_tone(200, 0.2))
-        self.sounds['hit'] = hit_sound
-        
-        # Power up sound - ascending tone
-        powerup_sound = pygame.sndarray.make_sound(self.generate_ascending_tone(0.5))
-        self.sounds['powerup'] = powerup_sound
+        if not self.sound_enabled:
+            return
+            
+        try:
+            # Player shoot sound - short beep
+            shoot_sound = pygame.sndarray.make_sound(self.generate_tone(800, 0.1))
+            self.sounds['shoot'] = shoot_sound
+            
+            # Alien shoot sound - lower pitch
+            alien_shoot_sound = pygame.sndarray.make_sound(self.generate_tone(400, 0.15))
+            self.sounds['alien_shoot'] = alien_shoot_sound
+            
+            # Explosion sound - noise burst
+            explosion_sound = pygame.sndarray.make_sound(self.generate_noise(0.3))
+            self.sounds['explosion'] = explosion_sound
+            
+            # Player hit sound - harsh tone
+            hit_sound = pygame.sndarray.make_sound(self.generate_tone(200, 0.2))
+            self.sounds['hit'] = hit_sound
+            
+            # Power up sound - ascending tone
+            powerup_sound = pygame.sndarray.make_sound(self.generate_ascending_tone(0.5))
+            self.sounds['powerup'] = powerup_sound
+        except:
+            # If sound creation fails, disable sound
+            self.sound_enabled = False
         
     def generate_tone(self, frequency, duration):
         """Generate a simple tone"""
@@ -76,6 +90,9 @@ class SoundManager:
         
     def play_sound(self, sound_name):
         """Play a sound effect"""
+        if not self.sound_enabled:
+            return
+            
         if sound_name in self.sounds:
             try:
                 self.sounds[sound_name].play()
@@ -84,11 +101,17 @@ class SoundManager:
                 
     def play_background_music(self):
         """Play background music (simple looping tone)"""
-        if not self.music_playing:
+        if not self.sound_enabled or self.music_playing:
+            return
+            
+        try:
             # Create a simple ambient background tone
             bg_music = pygame.sndarray.make_sound(self.generate_background_music())
             bg_music.play(-1)  # Loop indefinitely
             self.music_playing = True
+        except:
+            # If background music fails, just disable it
+            self.sound_enabled = False
             
     def generate_background_music(self):
         """Generate ambient background music"""
