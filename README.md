@@ -42,26 +42,34 @@ A classic space shooter game built with Python and Pygame. Defend Earth from wav
 
 1. **Clone or download this repository**
    ```bash
-   git clone https://github.com/yourusername/alien-invasion.git
+   git clone https://github.com/SivanRP/alien-invasion.git
    cd alien-invasion
    ```
 
-2. **Install required dependencies**
+2. **Create a virtual environment (recommended)**
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
+
+3. **Install required dependencies**
    ```bash
    pip install -r requirements.txt
    ```
 
-3. **Run the game**
+4. **Run the game**
    ```bash
    python alien_invasion.py
    ```
 
-### Alternative Installation
-If you don't have pip or prefer manual installation:
+### Alternative Installation (without virtual environment)
+If you prefer to install globally:
 ```bash
 pip install pygame
-python alien_invasion.py
+python3 alien_invasion.py
 ```
+
+**Note:** The game will run without sound effects if numpy is not available, but all gameplay features work perfectly!
 
 ## 🎯 Game Mechanics
 
